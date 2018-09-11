@@ -21,7 +21,11 @@ If You want to order assembled cartreader, please contact me through forum.ardui
 Thanks to:
 
 sanni - for his masterpiece which gathered all the community solutions for scattered ROMS and platforms
+
 skaman - SNES rom and mapping details 
+
 infinest - help with GB Memory Binary Maker source code which I forked and manage to adopt for SNES platform
+
 alex_n00b - bitmap letters for Menu
+
 and all comunity's creative work which allows to find those hidden gems and undocumented abilities in retro platforms
