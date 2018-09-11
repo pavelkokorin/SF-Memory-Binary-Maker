@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GB_Memory
+namespace SF_Memory
 {
     static class Program
     {

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace GB_Memory
 {
-
+    /*
     class TitleImage
     {
 
@@ -404,4 +404,5 @@ namespace GB_Memory
             return new Rectangle(120, 32, 4,8);
         }
     }
+    */
 }

@@ -8,11 +8,11 @@ using System.Security.Permissions;
 using System.Text;
 using System.Windows.Forms;
 
-namespace GB_Memory
+namespace SF_Memory
 {
     public partial class Main : Form
     {
-        const int ROMSpace = 896;
+        const int ROMSpace = 3584;//3584;
         int FreeROMSpace = ROMSpace;
         List<ROM> ROMList = new List<ROM>();
         public Main()
@@ -27,9 +27,9 @@ namespace GB_Memory
 
             //Create new sub-panel for ROM
             Panel ROMPanel = new Panel();
-            ROMPanel.Width = ROMListPanel.Width - 22;
-            ROMPanel.Height = 90;
-            ROMPanel.Location = new Point(1, 1 + ROMListPanel.Controls.Count * 91);
+            ROMPanel.Width = ROMListPanel.Width - 5;
+            ROMPanel.Height = 120;
+            ROMPanel.Location = new Point(1, 1 + ROMListPanel.Controls.Count * 121);
             ROMPanel.BorderStyle = BorderStyle.FixedSingle;
 
             //Invisible that contains the entered title in String format for later
@@ -40,6 +40,7 @@ namespace GB_Memory
 
             //Invisible that contains just the ASCII-title in String format for later
             Label AT = new Label();
+
             AT.Visible = false;
             AT.Text = ROMToAdd.ASCIITitle;
             ROMPanel.Controls.Add(AT);
@@ -50,36 +51,53 @@ namespace GB_Memory
             ASCIITitleDisplay.Location = new Point(5, 4);
             ROMPanel.Controls.Add(ASCIITitleDisplay);
 
+
+            
+
             Label CartTypeDisplay = new Label();
             CartTypeDisplay.AutoSize = true;
             CartTypeDisplay.Text = "Cart-Type: " + ROMToAdd.CartridgeTypeString;
             CartTypeDisplay.Location = new Point(5, 36);
             ROMPanel.Controls.Add(CartTypeDisplay);
 
-            Label TitleIMDisplay = new Label();
-            TitleIMDisplay.AutoSize = true;
-            TitleIMDisplay.Text = "Title:";
-            TitleIMDisplay.Location = new Point(5, 19);
-            ROMPanel.Controls.Add(TitleIMDisplay);
+            Label TitleDisplay = new Label();
+            TitleDisplay.AutoSize = true;
+            TitleDisplay.Text = "Menu Title:" + ROMToAdd.Title; ;
+            TitleDisplay.Location = new Point(5, 19);
+            ROMPanel.Controls.Add(TitleDisplay);
 
-            PictureBox TitleIMG = new PictureBox();
+            /*PictureBox TitleIMG = new PictureBox();
             TitleIMG.Image = TitleImage.CreateTitleBitmap(ROMToAdd.Title);
             TitleIMG.SizeMode = PictureBoxSizeMode.AutoSize;
             TitleIMG.Location = new Point(35, 21);
             TitleIMG.BorderStyle = BorderStyle.FixedSingle;
             ROMPanel.Controls.Add(TitleIMG);
+            */
 
             Label ROMSizeDisplay = new Label();
             ROMSizeDisplay.AutoSize = true;
-            ROMSizeDisplay.Text = "ROMSize: " + ROMToAdd.ROMSizeKByte + "kByte" + (ROMToAdd.padded ? " (padded to 128kByte)" : "");
+            ROMSizeDisplay.Text = "ROMSize: " + ROMToAdd.ROMSizeKByte + "kByte / " + (ROMToAdd.padded ? " (padded to 128kByte)" : "") + (ROMToAdd.ROMSizeKByte / 0x80) + "Mb";
             ROMSizeDisplay.Location = new Point(5, 53);
             ROMPanel.Controls.Add(ROMSizeDisplay);
 
             Label RAMSizeDisplay = new Label();
             RAMSizeDisplay.AutoSize = true;
-            RAMSizeDisplay.Text = "RAMSize: " + ROMToAdd.RAMSizeKByte + "kByte";
+            RAMSizeDisplay.Text = "RAMSize: " + ROMToAdd.RAMSizeKByte + "kByte / " + (ROMToAdd.RAMSizeKByte * 8) + "kb";
             RAMSizeDisplay.Location = new Point(5, 70);
             ROMPanel.Controls.Add(RAMSizeDisplay);
+
+            Label GameCodeDisplay = new Label();
+            GameCodeDisplay.AutoSize = true;
+            GameCodeDisplay.Text = "GameCode: " + ROMToAdd.GameCode;
+            GameCodeDisplay.Location = new Point(5, 87);
+            ROMPanel.Controls.Add(GameCodeDisplay);
+
+            Label ROMFileSizeDisplay = new Label();
+            ROMFileSizeDisplay.AutoSize = true;
+            ROMFileSizeDisplay.Text = "ROM File Size: " + ROMToAdd.ROMFileSizeKByte + "KBytes";
+            ROMFileSizeDisplay.Location = new Point(5, 104);
+            ROMPanel.Controls.Add(ROMFileSizeDisplay);
+
 
             Button Remove = new Button();
             Remove.Text = "Remove";
@@ -109,10 +127,13 @@ namespace GB_Memory
                     if (R.Title == ((Button)s).Parent.Controls[0].Text && R.ASCIITitle == ((Button)s).Parent.Controls[1].Text)
                     {
                         TitleEntry ROMEditTitle = new TitleEntry();
+                        //ROMEditTitle.
+                        //ROMEditTitle.Title = R.Title;
+
                         if (ROMEditTitle.ShowDialog() == DialogResult.OK)
                         {
                             R.Title = ROMEditTitle.Title;
-                            ((PictureBox)(((Button)s).Parent.Controls[5])).Image = TitleImage.CreateTitleBitmap(R.Title);
+                            //((PictureBox)(((Button)s).Parent.Controls[5])).Image = TitleImage.CreateTitleBitmap(R.Title);
                             (((Button)s).Parent.Controls[0]).Text = R.Title;
                         }
                         break;
@@ -127,7 +148,8 @@ namespace GB_Memory
                 Rip.Location = new Point(382, 1);
                 Rip.SizeMode = PictureBoxSizeMode.AutoSize;
                 Rip.Cursor = Cursors.Hand;
-                Rip.Image = GB_Memory.Properties.Resources.icon_save;
+
+                Rip.Image = SF_Memory.Properties.Resources.icon_save;
                 Rip.Click += (s, ev) =>
                 {
                     if (MessageBox.Show("Rip ROM from binary?", "Rip ROM", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -171,7 +193,7 @@ namespace GB_Memory
         {
             using (OpenFileDialog AddRom = new OpenFileDialog())
             {
-                AddRom.Filter = "All GB/C ROMs|*.gb;*.gbc";
+                AddRom.Filter = "All SFC/SNES ROMs|*.sfc;*.smc";
                 AddRom.Multiselect = true;
                 if (AddRom.ShowDialog() == DialogResult.OK)
                 {
@@ -211,7 +233,7 @@ namespace GB_Memory
             int TakenSpace = 0;
             foreach (ROM R in ROMList)
             {
-                TakenSpace += (!R.padded) ? R.ROMSizeKByte : 128;
+                TakenSpace += (!R.padded) ? R.ROMFileSizeKByte : 128;
             }
             FreeROMSpace = ROMSpace - TakenSpace;
             SpaceLabel.Text = String.Format("Free Space: {0}kByte", FreeROMSpace);
@@ -223,7 +245,7 @@ namespace GB_Memory
         {
             for (int i = 0; i < ((Panel)sender).Controls.Count; i++)
             {
-                ((Panel)sender).Controls[i].Location = new Point(1, i * 91 + (((Panel)sender).AutoScrollPosition.Y + 1));
+                ((Panel)sender).Controls[i].Location = new Point(1, i * 121 + (((Panel)sender).AutoScrollPosition.Y + 1));
             }
         }
 
@@ -250,25 +272,25 @@ namespace GB_Memory
 
             if (FreeROMSpace < 0)
             {
-                MessageBox.Show("Your ROMs exceed the 896kByte of free space!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Your ROMs exceed the kByte of free space!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             Byte[] MenuBuffer;
-            if (File.Exists(Application.StartupPath + @"\Menu.gbc"))
+            if (File.Exists(Application.StartupPath + @"\Menu.sfc"))
             {
-                MenuBuffer = File.ReadAllBytes(Application.StartupPath + @"\Menu.gbc");
+                MenuBuffer = File.ReadAllBytes(Application.StartupPath + @"\Menu.sfc");
             }
-            else if ((File.Exists(Application.StartupPath + @"\Menu.gb")))
-            {
-                MenuBuffer = File.ReadAllBytes(Application.StartupPath + @"\Menu.gb");
-            }
+            //else if ((File.Exists(Application.StartupPath + @"\Menu.sfc")))
+            //{
+            //   MenuBuffer = File.ReadAllBytes(Application.StartupPath + @"\Menu.gb");
+            //}
             else
             {
-                MessageBox.Show("Couldn't find Menu.gb or Menu.gbc", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Couldn't find Menu.sfc", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Array.Resize(ref MenuBuffer, 1024 * 1024);
+            Array.Resize(ref MenuBuffer, 4096 * 1024);
 
             String SavePath;
             using (SaveFileDialog ToSave = new SaveFileDialog())
@@ -284,7 +306,7 @@ namespace GB_Memory
             Byte[] MAPBytes = Processing.GenerateMAPForMenuBinary(ROMList);
 
             String[] FilesToCreate = new String[2];
-            FilesToCreate[0] = Path.GetDirectoryName(SavePath) + @"\" + Path.GetFileName(SavePath) + ".gb";
+            FilesToCreate[0] = Path.GetDirectoryName(SavePath) + @"\" + Path.GetFileName(SavePath) + ".sfc";
             FilesToCreate[1] = Path.GetDirectoryName(SavePath) + @"\" + Path.GetFileName(SavePath) + ".map";
             File.WriteAllBytes(FilesToCreate[0], MenuBuffer);
             File.WriteAllBytes(FilesToCreate[1], MAPBytes);
@@ -296,12 +318,12 @@ namespace GB_Memory
         {
             using (OpenFileDialog GenerateFor = new OpenFileDialog())
             {
-                GenerateFor.Filter = "All GB/C ROMs|*.gb;*.gbc";
+                GenerateFor.Filter = "All SFC ROMs|*.sfc;*.bin";
                 if (GenerateFor.ShowDialog() == DialogResult.OK && File.Exists(GenerateFor.FileName))
                 {
-                    if ((new FileInfo(GenerateFor.FileName).Length / 1024) > 1024)
+                    if ((new FileInfo(GenerateFor.FileName).Length / 1024) > 4096)
                     {
-                        MessageBox.Show("ROM size exceeds the maximum of 1024kByte.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("ROM size exceeds the maximum of 4096kByte.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -329,7 +351,7 @@ namespace GB_Memory
         {
             using (OpenFileDialog ImportMenu = new OpenFileDialog())
             {
-                ImportMenu.Filter = "1024kB GBM binary|*.gb;*.gbc;*.bin";
+                ImportMenu.Filter = "512kB SF Menu binary|*.sfc;*.bin";
                 ImportMenu.Multiselect = true;
                 if (ImportMenu.ShowDialog() == DialogResult.OK)
                 {
@@ -340,13 +362,13 @@ namespace GB_Memory
                         {
                             continue;
                         }
-                        if (new FileInfo(BinaryFile).Length / 1024 != 1024)
+                        if (new FileInfo(BinaryFile).Length / 1024 != 512)
                         {
-                            MessageBox.Show(String.Format("GBM binary {1}{0}{1} has to be 1024kByte in size!", Path.GetFileName(BinaryFile), '"'), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(String.Format("SF Menu binary {1}{0}{1} has to be 512kByte in size!", Path.GetFileName(BinaryFile), '"'), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             continue;
                         }
 
-                        ROMsToAdd.AddRange(Processing.ParseGBMBinary(BinaryFile));
+                        ROMsToAdd.AddRange(Processing.ParseSFMBinary(BinaryFile));
                     }
 
                     foreach (ROM R in ROMsToAdd)
@@ -365,25 +387,25 @@ namespace GB_Memory
 
         private void FileDrop(object sender, DragEventArgs e)
         {
-            String[] FileTypes = new String[] { ".gb", ".gbc", ".bin" };
+            String[] FileTypes = new String[] { ".sfc", ".bin" };
             String[] Files = (String[])e.Data.GetData(DataFormats.FileDrop);
             List<ROM> ROMsToAdd = new List<ROM>();
             foreach (String FileToProcess in Files)
             {
                 if (File.Exists(FileToProcess) && FileTypes.Contains(Path.GetExtension(FileToProcess)))
                 {
-                    Byte[] temp = new Byte[15], temp1 = new Byte[0x10];
+                    Byte[] temp = new Byte[15]/*, temp1 = new Byte[0x10]*/;
                     using (FileStream Reader = new FileStream(FileToProcess, FileMode.Open, FileAccess.Read))
                     {
-                        Reader.Position = 0x134;
+                        Reader.Position = 0x7FB0;
                         //ROM ASCII title
-                        Reader.Read(temp, 0, 15);
+                        Reader.Read(temp, 0, 6);
                         //Info entry header for Menu
-                        Reader.Position = 0x1C000;
-                        Reader.Read(temp1, 0, 0x10);
-                        if (Encoding.ASCII.GetString(temp) == "NP M-MENU  MENU" && temp1.SequenceEqual(new Byte[] { 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x44, 0x4D, 0x47, 0x20, 0x2D, 0x4D, 0x45, 0x4E, 0x55 }))
+                        //Reader.Position = 0x1C000;
+                        //Reader.Read(temp1, 0, 0x10);
+                        if (Encoding.ASCII.GetString(temp) == "01MENU" /*&& temp1.SequenceEqual(new Byte[] { 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x44, 0x4D, 0x47, 0x20, 0x2D, 0x4D, 0x45, 0x4E, 0x55 })*/)
                         {
-                            ROMsToAdd.AddRange(Processing.ParseGBMBinary(FileToProcess));
+                            ROMsToAdd.AddRange(Processing.ParseSFMBinary(FileToProcess));
                         }
                         else if (Path.GetExtension(FileToProcess) != ".bin")
                         {
@@ -414,7 +436,7 @@ namespace GB_Memory
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                String[] FileTypes = new String[] { ".gb", ".gbc", ".bin" };
+                String[] FileTypes = new String[] { ".sfc",  ".bin" };
                 String[] Files = (String[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (String F in Files)
                 {
@@ -429,6 +451,11 @@ namespace GB_Memory
             {
                 e.Effect = DragDropEffects.None;
             }
+        }
+
+        private void ROMListPanel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

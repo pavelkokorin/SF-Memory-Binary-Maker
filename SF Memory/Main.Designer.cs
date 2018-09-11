@@ -1,4 +1,4 @@
-﻿namespace GB_Memory
+﻿namespace SF_Memory
 {
     partial class Main
     {
@@ -60,15 +60,16 @@
             this.ROMListPanel.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.ROMListPanel_ControlRemoved);
             this.ROMListPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.FileDrop);
             this.ROMListPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.FileEnter);
+            this.ROMListPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.ROMListPanel_Paint);
             // 
             // SpaceLabel
             // 
             this.SpaceLabel.AutoSize = true;
-            this.SpaceLabel.Location = new System.Drawing.Point(322, 22);
+            this.SpaceLabel.Location = new System.Drawing.Point(324, 22);
             this.SpaceLabel.Name = "SpaceLabel";
-            this.SpaceLabel.Size = new System.Drawing.Size(113, 13);
+            this.SpaceLabel.Size = new System.Drawing.Size(119, 13);
             this.SpaceLabel.TabIndex = 3;
-            this.SpaceLabel.Text = "Free Space: 896kByte";
+            this.SpaceLabel.Text = "Free Space: 3584kByte";
             // 
             // CreateBinariesButton
             // 
@@ -83,11 +84,11 @@
             // MenuSpace
             // 
             this.MenuSpace.AutoSize = true;
-            this.MenuSpace.Location = new System.Drawing.Point(180, 22);
+            this.MenuSpace.Location = new System.Drawing.Point(182, 22);
             this.MenuSpace.Name = "MenuSpace";
-            this.MenuSpace.Size = new System.Drawing.Size(146, 13);
+            this.MenuSpace.Size = new System.Drawing.Size(150, 13);
             this.MenuSpace.TabIndex = 5;
-            this.MenuSpace.Text = "128kByte reserved for menu -";
+            this.MenuSpace.Text = "512kByte reserved for menu -";
             // 
             // MAPButton
             // 
@@ -95,18 +96,20 @@
             this.MAPButton.Name = "MAPButton";
             this.MAPButton.Size = new System.Drawing.Size(423, 23);
             this.MAPButton.TabIndex = 6;
-            this.MAPButton.Text = "Create MAP data for standalone ROM (Up to 1024kByte)";
+            this.MAPButton.Text = "Create MAP data for standalone ROM (Up to 4096kByte)";
             this.MAPButton.UseVisualStyleBackColor = true;
             this.MAPButton.Click += new System.EventHandler(this.MAPButtonClick);
             // 
             // ImportButton
             // 
+            this.ImportButton.Enabled = false;
             this.ImportButton.Location = new System.Drawing.Point(12, 440);
             this.ImportButton.Name = "ImportButton";
             this.ImportButton.Size = new System.Drawing.Size(423, 23);
             this.ImportButton.TabIndex = 7;
-            this.ImportButton.Text = "Import ROMs from 1024kByte GBM binary";
+            this.ImportButton.Text = "Import ROMs from 4096kByte SFM binary";
             this.ImportButton.UseVisualStyleBackColor = true;
+            this.ImportButton.Visible = false;
             this.ImportButton.Click += new System.EventHandler(this.ImportButtonClick);
             // 
             // Main
@@ -125,7 +128,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
-            this.Text = "GB Memory Binary Maker";
+            this.Text = "SF Memory Binary Maker";
             this.Load += new System.EventHandler(this.Main_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

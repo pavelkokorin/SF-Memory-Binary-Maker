@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GB_Memory
+namespace SF_Memory
 {
     public partial class TitleEntry : Form
     {
@@ -35,9 +35,11 @@ namespace GB_Memory
                 DisplayASCIITitle.AutoSize = true;
                 DisplayASCIITitle.Text = String.Format("Enter title for {0}",title);
                 DisplayASCIITitle.Location = new Point(5, 5);
+                textBox1.Text = ASCII.Substring(0,16);
                 this.Controls.Add(DisplayASCIITitle);
+
             }
-        }
+                    }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -53,6 +55,14 @@ namespace GB_Memory
             this.DialogResult = DialogResult.Cancel;
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void TitleEntry_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
