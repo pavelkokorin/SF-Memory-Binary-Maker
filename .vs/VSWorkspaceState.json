@@ -1,8 +1,8 @@
 {
   "ExpandedNodes": [
-    "",
     "\\SF Memory",
-    "\\SF Memory\\bin"
+    "\\SF Memory\\bin\\Debug",
+    "\\SF Memory\\Resources"
   ],
   "PreviewInSolutionExplorer": false
 }

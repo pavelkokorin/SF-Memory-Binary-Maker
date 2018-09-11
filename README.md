@@ -2,6 +2,8 @@
 
 ![N|Solid](https://preview.ibb.co/nwTqh9/SF_Memory_Cassette_and_GB_Memory_Cartridge.jpg)
 
+### NOTE: PLEASE DUMP ORIGINAL ROM AND MAPPING FROM SF MEMORY CART YOU OBTAINED AND SHARE IT WITH COMMUNITY FOR PRESERVATION.
+
 ##### This program's main purpose is to generate binaries to burn to a SF Memory Cartridge 
 
  It is able to:
