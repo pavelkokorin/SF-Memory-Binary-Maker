@@ -16,7 +16,7 @@ ___
 ### To read/write from and to your SF Memory cartridge I highly recommend using Sanni's [Cartridge Reader Shield for Arduino Mega 2560](https://github.com/sanni/cartreader)
 Please join the discussion http://forum.arduino.cc/index.php?topic=158974
 
-If You want to order assembled cartreader, please contact me through forum.arduino.cc my nikname there: moldov
+### If You want to order assembled cartreader, please contact me through forum.arduino.cc my nikname there: moldov
 
 Thanks to:
 
