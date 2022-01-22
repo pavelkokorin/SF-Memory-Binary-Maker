@@ -17,7 +17,15 @@ namespace SF_Memory
             ROM Output = new ROM();
             Output.ROMFileSize = Data.Length;
 
-            Data.Position = 0x7FD5;
+            DialogResult dialogResult = MessageBox.Show("Press yes for hiROM and no for loROM", "Select ROM type", MessageBoxButtons.YesNo);    
+            if (dialogResult == DialogResult.Yes)    
+            {    
+                Data.Position = 0xFFD5;    
+            }    
+            else if (dialogResult == DialogResult.No)    
+            {    
+                Data.Position = 0x7FD5;    
+            }   
             Output.CartridgeType = (byte)Data.ReadByte();
 
             //Check memory mapping type
