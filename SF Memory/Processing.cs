@@ -46,12 +46,12 @@ namespace SF_Memory
 
             //Read ROM header data
             Data.Position = Data.Position - 0x19;
-            Byte[] buffer = new Byte[22];
-            Data.Read(buffer, 0, 22);
-            Output.ASCIITitle = System.Text.ASCIIEncoding.ASCII.GetString(buffer);
+            Byte[] buffer = new Byte[21];
+            Data.Read(buffer, 0, 21);
+            Output.ASCIITitle = System.Text.ASCIIEncoding.ASCII.GetString(buffer, 0, 21);
             Data.Position = Data.Position - 0x25;
-            Data.Read(buffer, 0, 0x10);
-            Output.GameCode = System.Text.ASCIIEncoding.ASCII.GetString(buffer);
+            Data.Read(buffer, 0, 6);
+            Output.GameCode = System.Text.ASCIIEncoding.ASCII.GetString(buffer, 0, 6);
 
 
             if (Output.ROMSizeKByte < 128)
