@@ -437,13 +437,13 @@ namespace SF_Memory
                     //Port 2407h = Base (R)
                     //0 - 3 SRAM Base in 2K units
                     //4 - 7 ROM Base in 512K units(bit7 set for HIROM:MENU on skaman's blank cart)
-                     if (i == 0)
+                    if (i == 0)
                     {
                         Mem.WriteByte(0x10);
                     }
                     else
                     {
-                        SRAMBaseBits = SRAMBaseBits + ROMList[i].RAMSizeKByte / 2;
+                        SRAMBaseBits = SRAMBaseBits + ROMList[i-1].RAMSizeKByte / 2;
                         ROMBaseBits = ROMBaseBits + ROMList[i-1].ROMFileSizeKByte / 512;
 
                         int temp3 = ROMBaseBits * 16; //SHIFTING LEFT BY 4 DIGITS <<
