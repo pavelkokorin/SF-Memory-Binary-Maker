@@ -49,10 +49,20 @@ namespace SF_Memory
             Byte[] buffer = new Byte[21];
             Data.Read(buffer, 0, 21);
             Output.ASCIITitle = System.Text.ASCIIEncoding.ASCII.GetString(buffer, 0, 21);
-            Data.Position = Data.Position - 0x25;
-            Data.Read(buffer, 0, 6);
-            Output.GameCode = System.Text.ASCIIEncoding.ASCII.GetString(buffer, 0, 6);
 
+            // Check if expanded header exists
+            Data.Position = Data.Position + 0x5;
+            byte devid = (byte)Data.ReadByte();
+            if (devid == 0x33)
+            {
+                Data.Position = Data.Position - 0x2B;
+                Data.Read(buffer, 0, 6);
+                Output.GameCode = System.Text.ASCIIEncoding.ASCII.GetString(buffer, 0, 6);
+            }
+            else
+            {
+                Output.GameCode = new string(' ', 6);
+            }
 
             if (Output.ROMSizeKByte < 128)
             {
