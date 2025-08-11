@@ -432,24 +432,26 @@ namespace SF_Memory
                         Mem.WriteByte(0xAA);
                         Mem.WriteByte(0xFF);
                     }
-                    
-                    //Write 14 byte which means
+
+                    //Write 14 byte which means (15 byte is a high part)
                     //Port 2407h = Base (R)
                     //0 - 3 SRAM Base in 2K units
                     //4 - 7 ROM Base in 512K units(bit7 set for HIROM:MENU on skaman's blank cart)
-                    if (i == 0)
+                    if (i > 0)
                     {
-                        Mem.WriteByte(0x10);
+                        SRAMBaseBits += ROMList[i - 1].RAMSizeKByte / 2;
+                        ROMBaseBits += ROMList[i - 1].ROMFileSizeKByte / 512;
                     }
-                    else
-                    {
-                        SRAMBaseBits = SRAMBaseBits + ROMList[i-1].RAMSizeKByte / 2;
-                        ROMBaseBits = ROMBaseBits + ROMList[i-1].ROMFileSizeKByte / 512;
 
-                        int temp3 = ROMBaseBits * 16; //SHIFTING LEFT BY 4 DIGITS <<
-                        temp3 = temp3 + SRAMBaseBits;
-                        Mem.WriteByte(Convert.ToByte(temp3));
-                    }
+                    // write low part bits
+                    int lowPart = (ROMBaseBits & 0xF) << 4; // ROMBaseBits low part
+                    lowPart |= SRAMBaseBits & 0xF; // SRAMBaseBits low part
+                    Mem.WriteByte(Convert.ToByte(lowPart));
+
+                    // write high part bits
+                    int highPart = ROMBaseBits & 0xF0; // ROMBaseBits high part
+                    highPart |= SRAMBaseBits >> 4; // SRAMBaseBits high part
+                    Mem.WriteByte(Convert.ToByte(highPart));
                 }
 
                 while (Mem.Position < 0x192)
